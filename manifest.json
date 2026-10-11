@@ -1,0 +1,19 @@
+{
+  "name": "TypeRush: Ultimate Typing Battle Arena",
+  "short_name": "TypeRush",
+  "description": "Race cars, fight martial artists, challenge the 300 WPM Guinness World Record, and duel random live typists worldwide!",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a1a",
+  "theme_color": "#00f0ff",
+  "orientation": "landscape-primary",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "64x64 128x128 256x256 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["games", "entertainment", "education"]
+}

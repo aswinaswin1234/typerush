@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="TypeRush - Ultimate Cyber Typing Battle Arena. Race cars, martial arts combat, challenge the 300 WPM Guinness World Record, and duel random live typists worldwide!">
+  <meta name="theme-color" content="#00f0ff">
+  
+  <!-- Favicon & PWA -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="apple-touch-icon" href="favicon.svg">
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="TypeRush | Ultimate Typing Battle Arena">
+  <meta property="og:description" content="Race cars, duel random typists worldwide live, beat the 300 WPM Guinness World Record, and climb the leaderboard!">
+  <meta property="og:image" content="favicon.svg">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="TypeRush | Ultimate Typing Battle Arena">
+  <meta name="twitter:description" content="Race cars, duel random typists worldwide live, beat the 300 WPM Guinness World Record, and climb the leaderboard!">
+
+  <title>TypeRush | Ultimate Typing Battle Arena</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <!-- Particle Background -->
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- Screen Effects Overlay -->
+  <div id="screenFlash" class="screen-flash"></div>
+  <div id="screenVignette" class="screen-vignette"></div>
+  <div id="scanlines" class="scanlines"></div>
+
+  <!-- Main App Container -->
+  <div id="app">
+
+    <!-- ===== INTRO SPLASH SCREEN ===== -->
+    <div id="introScreen" class="screen active">
+      <div class="intro-bg">
+        <div class="speed-lines" id="speedLines"></div>
+        <div class="intro-grid"></div>
+      </div>
+
+      <div class="intro-content">
+        <!-- Floating typing words background -->
+        <div class="floating-words" id="floatingWords"></div>
+
+        <!-- Glitch Title -->
+        <div class="intro-title-wrap">
+          <h1 class="intro-title" id="introTitle" data-text="TYPERUSH">
+            <span class="glitch-layer glitch-top">TYPERUSH</span>
+            <span class="glitch-layer glitch-main">TYPERUSH</span>
+            <span class="glitch-layer glitch-bottom">TYPERUSH</span>
+          </h1>
+        </div>
+
+        <!-- Typing Demo Animation -->
+        <div class="typing-demo" id="typingDemo">
+          <div class="demo-keyboard" id="demoKeyboard">
+            <div class="key-row">
+              <span class="demo-key" data-key="q">Q</span>
+              <span class="demo-key" data-key="w">W</span>
+              <span class="demo-key" data-key="e">E</span>
+              <span class="demo-key" data-key="r">R</span>
+              <span class="demo-key" data-key="t">T</span>
+              <span class="demo-key" data-key="y">Y</span>
+              <span class="demo-key" data-key="u">U</span>
+              <span class="demo-key" data-key="i">I</span>
+              <span class="demo-key" data-key="o">O</span>
+              <span class="demo-key" data-key="p">P</span>
+            </div>
+            <div class="key-row">
+              <span class="demo-key" data-key="a">A</span>
+              <span class="demo-key" data-key="s">S</span>
+              <span class="demo-key" data-key="d">D</span>
+              <span class="demo-key" data-key="f">F</span>
+              <span class="demo-key" data-key="g">G</span>
+              <span class="demo-key" data-key="h">H</span>
+              <span class="demo-key" data-key="j">J</span>
+              <span class="demo-key" data-key="k">K</span>
+              <span class="demo-key" data-key="l">L</span>
+            </div>
+            <div class="key-row">
+              <span class="demo-key" data-key="z">Z</span>
+              <span class="demo-key" data-key="x">X</span>
+              <span class="demo-key" data-key="c">C</span>
+              <span class="demo-key" data-key="v">V</span>
+              <span class="demo-key" data-key="b">B</span>
+              <span class="demo-key" data-key="n">N</span>
+              <span class="demo-key" data-key="m">M</span>
+            </div>
+          </div>
+          <div class="demo-typed-line">
+            <span class="demo-typed" id="demoTyped"></span>
+            <span class="demo-cursor">|</span>
+          </div>
+          <div class="demo-wpm" id="demoWpm">142 WPM</div>
+          <div class="demo-words-burst" id="demoBurst"></div>
+        </div>
+
+        <!-- Stats Showcase -->
+        <div class="intro-stats" id="introStats">
+          <div class="intro-stat">
+            <span class="intro-stat-num" id="statPlayers">0</span>
+            <span class="intro-stat-label">KEYS TYPED</span>
+          </div>
+          <div class="intro-stat-divider"></div>
+          <div class="intro-stat">
+            <span class="intro-stat-num" id="statGames">0</span>
+            <span class="intro-stat-label">GAME MODES</span>
+          </div>
+          <div class="intro-stat-divider"></div>
+          <div class="intro-stat">
+            <span class="intro-stat-num" id="statWPM">0</span>
+            <span class="intro-stat-label">MAX WPM</span>
+          </div>
+        </div>
+
+        <!-- Enter CTA -->
+        <button class="intro-cta" id="introCta" onclick="exitIntro()">
+          <span class="cta-text">PRESS ANY KEY OR CLICK TO START</span>
+          <span class="cta-glow"></span>
+          <span class="cta-particles" id="ctaParticles"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== MAIN MENU ===== -->
+    <div id="mainMenu" class="screen">
+      <div class="menu-glow"></div>
+      <div class="menu-glow menu-glow-2"></div>
+      <div class="menu-orbs">
+        <div class="menu-orb orb-1"></div>
+        <div class="menu-orb orb-2"></div>
+        <div class="menu-orb orb-3"></div>
+      </div>
+      <div class="menu-content">
+        <h1 class="game-title" data-text="TYPERUSH">
+          <span class="title-type">TYPE</span><span class="title-rush">RUSH</span>
+          <div class="title-underline"></div>
+        </h1>
+        <p class="tagline">Type Fast. Win Big. Dominate.</p>
+        <div class="tagline-accent"></div>
+        <div class="live-status-pill">
+          <span class="live-dot-pulse"></span>
+          <span class="live-text"><strong id="onlineCount">1,482</strong> TYPISTS ONLINE LIVE</span>
+        </div>
+
+        <div class="player-setup">
+          <label for="playerNameInput" class="input-label">ENTER YOUR NAME</label>
+          <input type="text" id="playerNameInput" class="neon-input" placeholder="TypeMaster_2026" maxlength="16" autocomplete="off">
+
+          <!-- Sentence / Word Mode Selector -->
+          <div class="setup-option-row">
+            <div class="toggle-group" id="contentModeGroup">
+              <span class="toggle-title">TYPE MODE</span>
+              <div class="pill-toggle">
+                <button type="button" class="pill-btn" id="btnModeWords" onclick="setContentType('words')">🔤 Words</button>
+                <button type="button" class="pill-btn active" id="btnModeSentences" onclick="setContentType('sentences')">📝 Sentences</button>
+              </div>
+            </div>
+
+            <!-- Bot Difficulty Selector -->
+            <div class="toggle-group" id="botDifficultyGroup">
+              <span class="toggle-title">BOT SPEED</span>
+              <div class="pill-toggle bot-speed-toggle">
+                <button type="button" class="pill-btn" id="btnBotRookie" onclick="setBotDifficulty('rookie')">40 WPM</button>
+                <button type="button" class="pill-btn active" id="btnBotPro" onclick="setBotDifficulty('pro')">80 WPM</button>
+                <button type="button" class="pill-btn" id="btnBotMaster" onclick="setBotDifficulty('master')">150 WPM</button>
+                <button type="button" class="pill-btn gold-glow" id="btnBotGuinness" onclick="setBotDifficulty('guinness')">👑 300 WPM</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mode-grid">
+          <!-- Featured Live Multiplayer PVP Random Match -->
+          <button class="mode-card featured-multiplayer" id="btnMultiplayer" onclick="startMatchmaking()">
+            <div class="multiplayer-shimmer"></div>
+            <div class="mode-icon pvp-icon">🌐</div>
+            <div class="mode-info">
+              <div class="featured-badge pvp-badge">⚡ LIVE MULTIPLAYER PVP</div>
+              <h3>Play with Random Opponent</h3>
+              <p>Instant live matchmaking! Race random typists worldwide or duel a friend via room code.</p>
+            </div>
+            <div class="mode-badge live-badge"><span class="live-dot-sm"></span> LIVE PVP</div>
+          </button>
+
+          <!-- Featured Guinness World Record 300 WPM Challenge -->
+          <button class="mode-card featured-guinness" id="btnGuinness" onclick="selectMode('guinness')">
+            <div class="guinness-shimmer"></div>
+            <div class="mode-icon gold-icon">👑</div>
+            <div class="mode-info">
+              <div class="featured-badge">⚡ GUINNESS RECORD 300 WPM CHALLENGE</div>
+              <h3>World Record Duel</h3>
+              <p>Battle the superhuman 300 WPM Titan! Type full sentences against the world record pace.</p>
+            </div>
+            <div class="mode-badge gold-badge">300 WPM</div>
+          </button>
+
+          <button class="mode-card" id="btnSpeedRacer" onclick="selectMode('racer')">
+            <div class="mode-icon">🏎️</div>
+            <div class="mode-info">
+              <h3>Speed Racer</h3>
+              <p>Type to accelerate! Outrun the AI car in a head-to-head race.</p>
+            </div>
+            <div class="mode-badge">RACE</div>
+          </button>
+
+          <button class="mode-card" id="btnWordFighter" onclick="selectMode('fighter')">
+            <div class="mode-icon">⚔️</div>
+            <div class="mode-info">
+              <h3>Word Fighter</h3>
+              <p>Type combos to unleash strikes and defeat your opponent!</p>
+            </div>
+            <div class="mode-badge">FIGHT</div>
+          </button>
+
+          <button class="mode-card" id="btnWordBlitz" onclick="selectMode('blitz')">
+            <div class="mode-icon">⚡</div>
+            <div class="mode-info">
+              <h3>Word Blitz</h3>
+              <p>60 seconds. Unlimited speed. How fast can you type?</p>
+            </div>
+            <div class="mode-badge">BLITZ</div>
+          </button>
+
+          <button class="mode-card" id="btnSurvival" onclick="selectMode('survival')">
+            <div class="mode-icon">☠️</div>
+            <div class="mode-info">
+              <h3>Survival</h3>
+              <p>Words rain down! Type them before they reach the bottom.</p>
+            </div>
+            <div class="mode-badge">SURVIVE</div>
+          </button>
+        </div>
+
+        <button class="btn-leaderboard" id="btnShowLeaderboard" onclick="showLeaderboard()">
+          🏆 LEADERBOARD
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== LIVE MATCHMAKING RADAR SCREEN ===== -->
+    <div id="matchmakingScreen" class="screen">
+      <div class="matchmaking-container">
+        <div class="radar-box">
+          <div class="radar-sweep"></div>
+          <div class="radar-circle radar-circle-1"></div>
+          <div class="radar-circle radar-circle-2"></div>
+          <div class="radar-circle radar-circle-3"></div>
+          <div class="radar-crosshair-h"></div>
+          <div class="radar-crosshair-v"></div>
+          <div class="radar-blip blip-1"></div>
+          <div class="radar-blip blip-2"></div>
+          <div class="radar-blip blip-3"></div>
+          <div class="radar-center-icon">📡</div>
+        </div>
+
+        <h2 class="matchmaking-title" id="matchmakingTitle">SEARCHING FOR LIVE OPPONENT...</h2>
+        <p class="matchmaking-status" id="matchmakingStatus">Scanning global network (Ping: 24ms • Region: Auto)...</p>
+
+        <!-- Match Found Card -->
+        <div class="match-found-card" id="matchFoundCard" style="display: none;">
+          <div class="found-badge">MATCH FOUND!</div>
+          <div class="vs-matchup">
+            <div class="found-player you">
+              <div class="found-avatar" id="foundYouAvatar">🏎️</div>
+              <div class="found-name" id="foundYouName">YOU</div>
+              <div class="found-stat" id="foundYouStat">Rank: Pro</div>
+            </div>
+            <div class="found-vs">VS</div>
+            <div class="found-player rival">
+              <div class="found-avatar" id="foundRivalAvatar">🥷</div>
+              <div class="found-name" id="foundRivalName">CyberViper</div>
+              <div class="found-stat" id="foundRivalStat">98 WPM • 🇺🇸 US</div>
+            </div>
+          </div>
+          <div class="found-countdown" id="foundCountdown">DUEL BEGINS IN 3...</div>
+        </div>
+
+        <div class="room-code-section" id="roomCodeSection">
+          <span class="room-code-label">OR DUEL A FRIEND VIA ROOM CODE / DIRECT LINK:</span>
+          <div class="room-code-input-wrap">
+            <input type="text" id="roomCodeInput" class="neon-input room-input" placeholder="RUSH-77" maxlength="10">
+            <button type="button" class="btn-room-join" onclick="joinRoomByCode()">JOIN ROOM</button>
+            <button type="button" class="btn-copy-invite" id="btnCopyInvite" onclick="copyDuelInviteLink()">📋 COPY INVITE LINK</button>
+          </div>
+        </div>
+
+        <button type="button" class="btn-menu mm-cancel-btn" id="btnCancelMatchmaking" onclick="cancelMatchmaking()">CANCEL SEARCH</button>
+      </div>
+    </div>
+
+    <!-- ===== LIVE MULTIPLAYER DUEL SCREEN ===== -->
+    <div id="multiplayerScreen" class="screen game-screen">
+      <div class="game-hud pvp-hud">
+        <div class="hud-left">
+          <div class="hud-item">
+            <span class="hud-label">YOUR WPM</span>
+            <span class="hud-value" id="pvpPlayerWPM">0</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label">ACCURACY</span>
+            <span class="hud-value" id="pvpAccuracy">100%</span>
+          </div>
+        </div>
+        <div class="hud-center">
+          <div class="pvp-badge-header">
+            🌐 LIVE DUEL ARENA
+            <span class="network-badge" id="networkBadge">🟢 LIVE SERVER</span>
+          </div>
+          <div class="hud-time-wrap">
+            <span class="hud-label">ROUND</span>
+            <span class="hud-value hud-time" id="pvpRound">1/3</span>
+          </div>
+        </div>
+        <div class="hud-right">
+          <div class="hud-item">
+            <span class="hud-label">RIVAL WPM</span>
+            <span class="hud-value pvp-rival-wpm" id="pvpRivalWPM">0</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label">GAP</span>
+            <span class="hud-value" id="pvpGap">TIED</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="guinness-arena pvp-arena">
+        <!-- Opponent Lane -->
+        <div class="duel-lane rival-lane">
+          <div class="duel-header">
+            <div class="duel-profile">
+              <span class="duel-avatar rival-avatar" id="pvpRivalAvatar">🥷</span>
+              <div class="duel-info">
+                <span class="duel-name rival-text" id="pvpRivalName">RANDOM OPPONENT</span>
+                <span class="duel-sub" id="pvpRivalSub">LIVE MATCH • PING 24ms</span>
+              </div>
+            </div>
+            <div class="duel-stats-lane">
+              <span class="duel-lane-score" id="pvpRivalScore">Wins: 0</span>
+              <span class="progress-pct rival-pct" id="pvpRivalProgress">0%</span>
+            </div>
+          </div>
+          <div class="duel-progress-bar">
+            <div class="duel-fill rival-fill" id="pvpRivalFill"></div>
+            <div class="duel-runner rival-runner" id="pvpRivalRunner">🏎️</div>
+          </div>
+        </div>
+
+        <!-- VS Divider with dynamic gap meter -->
+        <div class="duel-vs-bar">
+          <div class="gap-meter-container">
+            <span class="gap-label gap-player-side">YOU AHEAD</span>
+            <div class="gap-meter-track">
+              <div class="gap-meter-center"></div>
+              <div class="gap-meter-needle" id="pvpNeedle"></div>
+            </div>
+            <span class="gap-label gap-bot-side">RIVAL AHEAD</span>
+          </div>
+        </div>
+
+        <!-- Player Lane -->
+        <div class="duel-lane player-lane">
+          <div class="duel-header">
+            <div class="duel-profile">
+              <span class="duel-avatar player-avatar" id="pvpPlayerAvatar">🏎️</span>
+              <div class="duel-info">
+                <span class="duel-name" id="pvpPlayerName">YOU</span>
+                <span class="duel-sub">LIVE COMPETITOR</span>
+              </div>
+            </div>
+            <div class="duel-stats-lane">
+              <span class="duel-lane-score" id="pvpPlayerScore">Wins: 0</span>
+              <span class="progress-pct" id="pvpPlayerProgress">0%</span>
+            </div>
+          </div>
+          <div class="duel-progress-bar">
+            <div class="duel-fill player-fill" id="pvpPlayerFill"></div>
+            <div class="duel-runner player-runner" id="pvpPlayerRunner">🔥</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sentence Display & Typing Area -->
+      <div class="typing-area sentence-typing-area">
+        <div class="sentence-display" id="pvpSentenceDisplay">
+          <!-- Populated by JS -->
+        </div>
+        <input type="text" id="pvpInput" class="typing-input sentence-input" placeholder="Type the live sentence to beat your opponent..." autocomplete="off" autocapitalize="off" spellcheck="false">
+
+        <!-- Quick Emote Bar -->
+        <div class="live-emote-bar">
+          <span class="emote-label">QUICK EMOTES:</span>
+          <button type="button" class="emote-btn" onclick="sendLiveEmote('🔥')">🔥 Nitro</button>
+          <button type="button" class="emote-btn" onclick="sendLiveEmote('⚡')">⚡ Speed</button>
+          <button type="button" class="emote-btn" onclick="sendLiveEmote('🏎️')">🏎️ Vroom</button>
+          <button type="button" class="emote-btn" onclick="sendLiveEmote('💀')">💀 Oof</button>
+          <button type="button" class="emote-btn" onclick="sendLiveEmote('👑')">👑 GG</button>
+        </div>
+        <div class="floating-emotes-layer" id="floatingEmotesLayer"></div>
+      </div>
+    </div>
+
+    <!-- ===== GUINNESS 300 WPM CHALLENGE MODE ===== -->
+    <div id="guinnessScreen" class="screen game-screen">
+      <div class="game-hud guinness-hud">
+        <div class="hud-left">
+          <div class="hud-item">
+            <span class="hud-label">YOUR WPM</span>
+            <span class="hud-value" id="guinnessWPM">0</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label">ACCURACY</span>
+            <span class="hud-value" id="guinnessAccuracy">100%</span>
+          </div>
+        </div>
+        <div class="hud-center">
+          <div class="guinness-badge-header">👑 300 WPM GUINNESS RECORD DUEL</div>
+          <div class="hud-time-wrap">
+            <span class="hud-label">ROUND</span>
+            <span class="hud-value hud-time" id="guinnessRound">1/3</span>
+          </div>
+        </div>
+        <div class="hud-right">
+          <div class="hud-item">
+            <span class="hud-label">BOT SPEED</span>
+            <span class="hud-value bot-wpm-gold" id="guinnessBotWPM">300 WPM</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label">PACE GAP</span>
+            <span class="hud-value" id="guinnessGap">TIED</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="guinness-arena">
+        <!-- Bot Lane -->
+        <div class="duel-lane bot-lane">
+          <div class="duel-header">
+            <div class="duel-profile">
+              <span class="duel-avatar titan-avatar">🤖⚡</span>
+              <div class="duel-info">
+                <span class="duel-name gold-text">GUINNESS TITAN BOT</span>
+                <span class="duel-sub">⚡ PACING AT 300 WPM (25 chars/sec)</span>
+              </div>
+            </div>
+            <div class="duel-stats-lane">
+              <span class="duel-lane-score" id="guinnessBotScore">Wins: 0</span>
+              <span class="progress-pct" id="guinnessBotProgress">0%</span>
+            </div>
+          </div>
+          <div class="duel-progress-bar">
+            <div class="duel-fill bot-fill" id="guinnessBotFill"></div>
+            <div class="duel-runner bot-runner" id="guinnessBotRunner">👑</div>
+          </div>
+        </div>
+
+        <!-- VS Divider with dynamic gap meter -->
+        <div class="duel-vs-bar">
+          <div class="gap-meter-container">
+            <span class="gap-label gap-player-side">YOU FASTER</span>
+            <div class="gap-meter-track">
+              <div class="gap-meter-center"></div>
+              <div class="gap-meter-needle" id="guinnessNeedle"></div>
+            </div>
+            <span class="gap-label gap-bot-side">300 WPM BOT FASTER</span>
+          </div>
+        </div>
+
+        <!-- Player Lane -->
+        <div class="duel-lane player-lane">
+          <div class="duel-header">
+            <div class="duel-profile">
+              <span class="duel-avatar player-avatar">🏎️</span>
+              <div class="duel-info">
+                <span class="duel-name" id="guinnessPlayerName">YOU</span>
+                <span class="duel-sub" id="guinnessPlayerSub">CHALLENGING THE 300 WPM RECORD</span>
+              </div>
+            </div>
+            <div class="duel-stats-lane">
+              <span class="duel-lane-score" id="guinnessPlayerScore">Wins: 0</span>
+              <span class="progress-pct" id="guinnessPlayerProgress">0%</span>
+            </div>
+          </div>
+          <div class="duel-progress-bar">
+            <div class="duel-fill player-fill" id="guinnessPlayerFill"></div>
+            <div class="duel-runner player-runner" id="guinnessPlayerRunner">🔥</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sentence Display & Typing Area -->
+      <div class="typing-area sentence-typing-area">
+        <div class="sentence-display" id="guinnessSentenceDisplay">
+          <!-- Populated by JS -->
+        </div>
+        <input type="text" id="guinnessInput" class="typing-input sentence-input" placeholder="Type the sentence above to defeat the 300 WPM Bot..." autocomplete="off" autocapitalize="off" spellcheck="false">
+      </div>
+    </div>
+
+    <!-- ===== SPEED RACER MODE ===== -->
+    <div id="racerScreen" class="screen game-screen">
+      <div class="game-hud">
+        <div class="hud-left">
+          <div class="hud-item">
+            <span class="hud-label">WPM</span>
+            <span class="hud-value" id="racerWPM">0</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label">ACCURACY</span>
+            <span class="hud-value" id="racerAccuracy">100%</span>
+          </div>
+        </div>
+        <div class="hud-center">
+          <span class="hud-label">TIME</span>
+          <span class="hud-value hud-time" id="racerTime">0:60</span>
+        </div>
+        <div class="hud-right">
+          <div class="hud-item">
+            <span class="hud-label">SCORE</span>
+            <span class="hud-value" id="racerScore">0</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label">COMBO</span>
+            <span class="hud-value" id="racerCombo">x1</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="race-track">
+        <div class="track-lane player-lane">
+          <div class="lane-label">YOU</div>
+          <div class="track-road">
+            <div class="road-lines"></div>
+            <div class="car player-car" id="playerCar">
+              <div class="car-body">🏎️</div>
+              <div class="car-flame" id="playerFlame"></div>
+            </div>
+            <div class="finish-line" id="finishLine1"></div>
+          </div>
+          <div class="speed-indicator" id="playerSpeed">0 km/h</div>
+        </div>
+        <div class="track-divider"></div>
+        <div class="track-lane ai-lane">
+          <div class="lane-label">CPU</div>
+          <div class="track-road">
+            <div class="road-lines"></div>
+            <div class="car ai-car" id="aiCar">
+              <div class="car-body">🏎️</div>
+              <div class="car-flame" id="aiFlame"></div>
+            </div>
+            <div class="finish-line" id="finishLine2"></div>
+          </div>
+          <div class="speed-indicator" id="aiSpeed">0 km/h</div>
+        </div>
+      </div>
+
+      <div class="typing-area">
+        <div class="word-display" id="racerWordDisplay">
+          <span class="current-word" id="racerCurrentWord">ready</span>
+        </div>
+        <input type="text" id="racerInput" class="typing-input" placeholder="Type the word above..." autocomplete="off" autocapitalize="off" spellcheck="false">
+      </div>
+    </div>
+
+    <!-- ===== WORD FIGHTER MODE ===== -->
+    <div id="fighterScreen" class="screen game-screen">
+      <div class="game-hud">
+        <div class="hud-left">
+          <div class="hud-item">
+            <span class="hud-label">WPM</span>
+            <span class="hud-value" id="fighterWPM">0</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label">COMBO</span>
+            <span class="hud-value" id="fighterCombo">x1</span>
+          </div>
+        </div>
+        <div class="hud-center">
+          <span class="hud-label">ROUND</span>
+          <span class="hud-value hud-time" id="fighterRound">1/3</span>
+        </div>
+        <div class="hud-right">
+          <div class="hud-item">
+            <span class="hud-label">SCORE</span>
+            <span class="hud-value" id="fighterScore">0</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label">TIME</span>
+            <span class="hud-value" id="fighterTime">0:45</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="fight-arena">
+        <div class="fighter player-fighter">
+          <div class="fighter-name" id="playerFighterName">YOU</div>
+          <div class="health-bar">
+            <div class="health-fill player-health" id="playerHealth"></div>
+            <span class="health-text" id="playerHealthText">100</span>
+          </div>
+          <div class="fighter-sprite" id="playerSprite">🥷</div>
+          <div class="attack-effect" id="playerAttackFx"></div>
+        </div>
+
+        <div class="vs-badge">VS</div>
+
+        <div class="fighter enemy-fighter">
+          <div class="fighter-name">ENEMY</div>
+          <div class="health-bar">
+            <div class="health-fill enemy-health" id="enemyHealth"></div>
+            <span class="health-text" id="enemyHealthText">100</span>
+          </div>
+          <div class="fighter-sprite" id="enemySprite">🤖</div>
+          <div class="attack-effect" id="enemyAttackFx"></div>
+        </div>
+      </div>
+
+      <div class="typing-area">
+        <div class="word-display" id="fighterWordDisplay">
+          <span class="current-word" id="fighterCurrentWord">fight</span>
+        </div>
+        <input type="text" id="fighterInput" class="typing-input" placeholder="Type to attack!" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <div class="damage-indicator" id="damageIndicator"></div>
+      </div>
+    </div>
+
+    <!-- ===== WORD BLITZ MODE ===== -->
+    <div id="blitzScreen" class="screen game-screen">
+      <div class="game-hud">
+        <div class="hud-left">
+          <div class="hud-item">
+            <span class="hud-label">WPM</span>
+            <span class="hud-value" id="blitzWPM">0</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label">ACCURACY</span>
+            <span class="hud-value" id="blitzAccuracy">100%</span>
+          </div>
+        </div>
+        <div class="hud-center">
+          <span class="hud-label">TIME</span>
+          <span class="hud-value hud-time" id="blitzTime">1:00</span>
+        </div>
+        <div class="hud-right">
+          <div class="hud-item">
+            <span class="hud-label">WORDS</span>
+            <span class="hud-value" id="blitzWords">0</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label">COMBO</span>
+            <span class="hud-value" id="blitzCombo">x1</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="blitz-area">
+        <div class="blitz-score-big" id="blitzScoreBig">0</div>
+        <div class="blitz-multiplier" id="blitzMultiplier">SCORE</div>
+        <div class="blitz-streak-bar">
+          <div class="streak-fill" id="blitzStreakFill"></div>
+        </div>
+        <div class="blitz-word-queue" id="blitzWordQueue"></div>
+      </div>
+
+      <div class="typing-area">
+        <div class="word-display" id="blitzWordDisplay">
+          <span class="current-word" id="blitzCurrentWord">start</span>
+        </div>
+        <input type="text" id="blitzInput" class="typing-input" placeholder="Type as fast as you can!" autocomplete="off" autocapitalize="off" spellcheck="false">
+      </div>
+    </div>
+
+    <!-- ===== SURVIVAL MODE ===== -->
+    <div id="survivalScreen" class="screen game-screen">
+      <div class="game-hud">
+        <div class="hud-left">
+          <div class="hud-item">
+            <span class="hud-label">WPM</span>
+            <span class="hud-value" id="survivalWPM">0</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label">LIVES</span>
+            <span class="hud-value" id="survivalLives">❤️❤️❤️</span>
+          </div>
+        </div>
+        <div class="hud-center">
+          <span class="hud-label">WAVE</span>
+          <span class="hud-value hud-time" id="survivalWave">1</span>
+        </div>
+        <div class="hud-right">
+          <div class="hud-item">
+            <span class="hud-label">SCORE</span>
+            <span class="hud-value" id="survivalScore">0</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label">TYPED</span>
+            <span class="hud-value" id="survivalTyped">0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="survival-area" id="survivalArea">
+        <div class="danger-zone" id="dangerZone"></div>
+      </div>
+
+      <div class="typing-area survival-typing">
+        <input type="text" id="survivalInput" class="typing-input" placeholder="Type the falling words..." autocomplete="off" autocapitalize="off" spellcheck="false">
+      </div>
+    </div>
+
+    <!-- ===== COUNTDOWN OVERLAY ===== -->
+    <div id="countdownOverlay" class="overlay">
+      <div class="countdown-number" id="countdownNumber">3</div>
+    </div>
+
+    <!-- ===== GAME OVER OVERLAY ===== -->
+    <div id="gameOverOverlay" class="overlay">
+      <div class="game-over-content">
+        <h2 class="game-over-title" id="gameOverTitle">GAME OVER</h2>
+        <div class="result-badge" id="resultBadge">🏆</div>
+        <div class="final-stats" id="finalStats"></div>
+        <div class="game-over-buttons">
+          <button class="btn-retry" id="btnRetry" onclick="retryGame()">🔄 PLAY AGAIN</button>
+          <button class="btn-menu" id="btnBackMenu" onclick="goToMenu()">🏠 MAIN MENU</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== LEADERBOARD ===== -->
+    <div id="leaderboardScreen" class="screen">
+      <div class="leaderboard-container">
+        <h2 class="leaderboard-title">🏆 LEADERBOARD</h2>
+        <div class="leaderboard-tabs">
+          <button class="lb-tab active" id="lbTabPvp" onclick="switchLeaderboard('pvp')">🌐 Live PvP</button>
+          <button class="lb-tab" id="lbTabGuinness" onclick="switchLeaderboard('guinness')">👑 Guinness 300</button>
+          <button class="lb-tab" id="lbTabRacer" onclick="switchLeaderboard('racer')">🏎️ Racer</button>
+          <button class="lb-tab" id="lbTabFighter" onclick="switchLeaderboard('fighter')">⚔️ Fighter</button>
+          <button class="lb-tab" id="lbTabBlitz" onclick="switchLeaderboard('blitz')">⚡ Blitz</button>
+          <button class="lb-tab" id="lbTabSurvival" onclick="switchLeaderboard('survival')">☠️ Survival</button>
+        </div>
+        <div class="leaderboard-table" id="leaderboardTable">
+          <!-- Populated by JS -->
+        </div>
+        <button class="btn-menu lb-back" id="btnLbBack" onclick="goToMenu()">🏠 BACK TO MENU</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Real-time Toast Notifications -->
+  <div id="toastMessage" class="toast-message"></div>
+
+  <script src="game.js"></script>
+</body>
+</html>

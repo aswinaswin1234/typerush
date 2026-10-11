@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f0ff" />
+      <stop offset="50%" stop-color="#7000ff" />
+      <stop offset="100%" stop-color="#ff007f" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2.5" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+  <!-- Background Rounded Hexagon / Shield -->
+  <rect x="4" y="4" width="56" height="56" rx="14" fill="#0a0a1a" stroke="url(#grad1)" stroke-width="2.5" />
+  <!-- Neon Keyboard Grid Accent -->
+  <rect x="14" y="16" width="8" height="6" rx="1.5" fill="#00f0ff" opacity="0.6"/>
+  <rect x="25" y="16" width="8" height="6" rx="1.5" fill="#00f0ff" opacity="0.6"/>
+  <rect x="36" y="16" width="8" height="6" rx="1.5" fill="#00f0ff" opacity="0.6"/>
+  <rect x="47" y="16" width="4" height="6" rx="1.5" fill="#ff007f" opacity="0.6"/>
+  
+  <!-- Cyber Lightning Bolt in Center -->
+  <polygon points="35,14 18,36 30,36 27,52 46,28 34,28" fill="url(#grad1)" filter="url(#glow)" stroke="#ffffff" stroke-width="0.8" />
+</svg>

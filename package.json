@@ -1,0 +1,23 @@
+{
+  "name": "typerush",
+  "version": "2.0.0",
+  "description": "TypeRush - Ultimate Live Multiplayer Typing Battle Arena with Guinness 300 WPM Challenge",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "typing-game",
+    "multiplayer",
+    "speed-typing",
+    "guinness-record",
+    "webrtc"
+  ],
+  "author": "TypeRush Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "ws": "^8.18.0"
+  }
+}
